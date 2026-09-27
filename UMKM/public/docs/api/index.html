@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Developer API Documentation — UMKM Management</title>
+  <link rel="icon" type="image/png" href="/logo-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+        colors: { emerald: { 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857' } }
+      } }
+    }
+  </script>
+  <style>
+    :root { --acc:#059669; --acc-soft:rgba(5,150,105,0.12); }
+    body { font-family:'Inter',ui-sans-serif,system-ui,sans-serif; font-feature-settings:"cv02","cv03","cv04","cv11"; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+    h1,h2,h3 { letter-spacing:-0.018em; }
+    h1 { letter-spacing:-0.028em; }
+    button:not(:disabled) { cursor: pointer; }
+    pre code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .code-tab-btn { transition: all 0.15s; }
+    .code-tab-btn.active { background: var(--acc); color: #06120d; font-weight: 600; }
+    .code-panel { display: none; }
+    .code-panel.active { display: block; }
+    .bg-grid { background-image:linear-gradient(to right,rgba(255,255,255,0.06) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,0.06) 1px,transparent 1px); background-size:44px 44px; -webkit-mask-image:radial-gradient(ellipse 75% 60% at 50% 0%,#000 55%,transparent 100%); mask-image:radial-gradient(ellipse 75% 60% at 50% 0%,#000 55%,transparent 100%); }
+    html:not(.dark) .bg-grid { background-image:linear-gradient(to right,rgba(15,23,42,0.055) 1px,transparent 1px),linear-gradient(to bottom,rgba(15,23,42,0.055) 1px,transparent 1px); }
+    .bg-aurora::before { content:""; position:absolute; inset:-30%; background:radial-gradient(40% 55% at 20% 15%,rgba(5,150,105,0.20),transparent 60%),radial-gradient(35% 50% at 85% 25%,rgba(4,120,87,0.16),transparent 60%),radial-gradient(45% 45% at 60% 90%,rgba(5,150,105,0.12),transparent 60%); filter:blur(30px); pointer-events:none; z-index:0; }
+    .shiny-text { background:linear-gradient(110deg,currentColor 40%,#fff 50%,currentColor 60%); background-size:220% 100%; -webkit-background-clip:text; background-clip:text; color:transparent; animation:shiny 4.5s linear infinite; }
+    @keyframes shiny { to { background-position:-220% 0; } }
+    .spotlight { position:relative; }
+    .spotlight::before { content:""; position:absolute; inset:0; border-radius:inherit; background:radial-gradient(240px circle at var(--mx,50%) var(--my,0%),var(--acc-soft),transparent 70%); opacity:0; transition:opacity .3s ease; pointer-events:none; }
+    .spotlight:hover::before { opacity:1; }
+    .rise-in { animation:rise .5s cubic-bezier(.16,1,.3,1) both; }
+    @keyframes rise { from { opacity:0; transform:translateY(10px);} to { opacity:1; transform:none;} }
+    *::-webkit-scrollbar { width:8px; height:8px; }
+    *::-webkit-scrollbar-thumb { background:rgba(148,163,184,0.35); border-radius:9999px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-zinc-950 dark:text-zinc-100 min-h-screen font-sans selection:bg-emerald-500 selection:text-white transition-colors duration-200">
+  <div id="app" class="flex flex-col min-h-screen">
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-zinc-950/70 backdrop-blur-xl border-b border-slate-200/70 dark:border-zinc-800/70 px-4 md:px-8 py-3 transition-colors">
+      <div class="max-w-5xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <a href="/" class="flex items-center gap-2.5 group">
+            <img src="/logo-icon.png" alt="Logo" class="w-8 h-8 object-contain group-hover:scale-105 transition-transform" />
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-sm tracking-tight text-slate-900 dark:text-white group-hover:text-emerald-500 transition-colors">UMKM ERP</span>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">API v1.0</span>
+            </div>
+          </a>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <button id="themeToggle" class="p-2 rounded-xl border transition-all flex items-center justify-center cursor-pointer bg-zinc-900 border-zinc-800 text-zinc-300 hover:text-amber-400">
+            <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 hidden"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path></svg>
+            <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M6.34 17.66l-1.41 1.41"></path><path d="M19.07 4.93l-1.41 1.41"></path></svg>
+          </button>
+          <a href="/" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-zinc-950 font-semibold text-xs transition-all shadow-sm flex items-center gap-1.5"><span>&#8592; Back to Workspace</span></a>
+        </div>
+      </div>
+    </header>
+    <section class="relative overflow-hidden border-b border-slate-200 dark:border-zinc-800">
+      <div class="absolute inset-0 dark:bg-aurora"></div>
+      <div class="absolute inset-0 bg-grid pointer-events-none"></div>
+      <div class="relative z-10 max-w-5xl mx-auto px-4 md:px-8 py-14 space-y-4 rise-in">
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold"><i class="fas fa-terminal text-[11px]"></i><span>RESTful HTTP API Reference</span></div>
+        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white max-w-2xl leading-tight">Bot &amp; Developer <span class="shiny-text">Integration Guide</span></h1>
+        <p class="text-sm text-slate-600 dark:text-zinc-400 max-w-2xl leading-relaxed">Connect automated bots, Point-of-Sale hardware, cron syncs, and accounting scripts directly with the UMKM Enterprise backend. Typed JSON, key-based auth, predictable errors.</p>
+        <div class="flex flex-wrap items-center gap-2 pt-1 text-xs font-mono">
+          <span class="px-2.5 py-1 rounded-lg bg-white/70 dark:bg-zinc-900/70 border border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400">Base URL: <span class="text-emerald-600 dark:text-emerald-400">https://umkm.skyuniverse.tech</span></span>
+          <span class="px-2.5 py-1 rounded-lg bg-white/70 dark:bg-zinc-900/70 border border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400">Format: JSON</span>
+        </div>
+      </div>
+    </section>
+    <main class="flex-1 max-w-5xl w-full mx-auto p-4 md:p-8 space-y-10">
+      <section class="spotlight bg-white dark:bg-zinc-900/70 border border-slate-200 dark:border-zinc-800 rounded-2xl p-5 md:p-6 space-y-4 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 dark:border-zinc-800 pb-3 gap-2">
+          <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span><h2 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Authentication Protocol</h2></div>
+          <span class="text-xs font-mono text-slate-500 dark:text-zinc-400">Base URL: https://umkm.skyuniverse.tech</span>
+        </div>
+        <p class="text-xs text-slate-700 dark:text-zinc-300 leading-relaxed">Every request must provide an active API Key via the <code class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-zinc-950 text-amber-600 dark:text-amber-400 font-mono text-[11px] border border-slate-200 dark:border-zinc-800">Authorization</code> or <code class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-zinc-950 text-amber-600 dark:text-amber-400 font-mono text-[11px] border border-slate-200 dark:border-zinc-800">X-API-Key</code> header. Keys are generated on the System page.</p>
+        <div class="bg-slate-900 text-slate-100 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono border border-slate-800">
+          <code class="text-amber-400">Authorization: Bearer &lt;YOUR_API_KEY&gt;</code>
+          <button onclick="copySnippet('Authorization: Bearer <YOUR_API_KEY>')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white transition-colors text-[11px] self-start sm:self-auto border border-slate-700">Copy Header</button>
+        </div>
+      </section>
+      <section class="space-y-4">
+        <h2 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>1. Daily Operations &amp; Periodic Inventory</span></h2>
+        <div class="spotlight bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800 rounded-2xl p-5 space-y-3 shadow-sm">
+          <div class="flex items-center justify-between flex-wrap gap-2"><div class="flex items-center gap-2 font-mono text-xs"><span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold border border-blue-500/20">GET</span><span class="font-semibold text-slate-900 dark:text-white">/api/daily-sales?date=YYYY-MM-DD</span></div><span class="text-[11px] text-slate-500 dark:text-zinc-500">Query daily stock levels by date</span></div>
+          <p class="text-xs text-slate-600 dark:text-zinc-400">Returns all SKU entries, starting stock, restock amounts, leftover quantities, calculated units sold, and recognized revenue.</p>
+          <div class="space-y-0"><div class="flex gap-1 bg-slate-800 rounded-t-xl px-2 pt-2"><button class="code-tab-btn active px-2.5 py-1 rounded-t-lg text-[11px]" data-group="g1" data-tab="curl">cURL</button><button class="code-tab-btn px-2.5 py-1 rounded-t-lg text-[11px] text-zinc-400 hover:text-white" data-group="g1" data-tab="python">Python</button><button class="code-tab-btn px-2.5 py-1 rounded-t-lg text-[11px] text-zinc-400 hover:text-white" data-group="g1" data-tab="node">Node.js</button></div>
+            <div class="bg-slate-900 text-slate-200 rounded-b-xl rounded-tr-xl p-3 font-mono text-xs overflow-x-auto border border-slate-800 border-t-0">
+              <div class="code-panel active" data-group="g1" data-tab="curl"><pre><code>curl -s -H "Authorization: Bearer &lt;API_KEY&gt;" \
+  https://umkm.skyuniverse.tech/api/daily-sales?date=2026-09-25</code></pre></div>
+              <div class="code-panel" data-group="g1" data-tab="python"><pre><code>import requests
+res = requests.get("https://umkm.skyuniverse.tech/api/daily-sales",
+    params={"date": "2026-09-25"},
+    headers={"Authorization": "Bearer &lt;API_KEY&gt;"})
+print(res.json())</code></pre></div>
+              <div class="code-panel" data-group="g1" data-tab="node"><pre><code>const res = await fetch(
+  "https://umkm.skyuniverse.tech/api/daily-sales?date=2026-09-25",
+  { headers: { Authorization: "Bearer &lt;API_KEY&gt;" } });
+console.log(await res.json());</code></pre></div>
+          </div></div>
+        </div>
+        <div class="spotlight bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800 rounded-2xl p-5 space-y-3 shadow-sm">
+          <div class="flex items-center justify-between flex-wrap gap-2"><div class="flex items-center gap-2 font-mono text-xs"><span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/20">POST</span><span class="font-semibold text-slate-900 dark:text-white">/api/daily-sales</span></div><span class="text-[11px] text-slate-500 dark:text-zinc-500">Submit Daily Inventory Count</span></div>
+          <p class="text-xs text-slate-600 dark:text-zinc-400">Net sold = <code class="text-emerald-600 dark:text-emerald-400 font-mono">(starting + restock) - leftover</code>.</p>
+          <div class="space-y-0"><div class="flex gap-1 bg-slate-800 rounded-t-xl px-2 pt-2"><button class="code-tab-btn active px-2.5 py-1 rounded-t-lg text-[11px]" data-group="g2" data-tab="curl">cURL</button><button class="code-tab-btn px-2.5 py-1 rounded-t-lg text-[11px] text-zinc-400 hover:text-white" data-group="g2" data-tab="python">Python</button><button class="code-tab-btn px-2.5 py-1 rounded-t-lg text-[11px] text-zinc-400 hover:text-white" data-group="g2" data-tab="node">Node.js</button></div>
+            <div class="bg-slate-900 text-slate-200 rounded-b-xl rounded-tr-xl p-3 font-mono text-xs overflow-x-auto border border-slate-800 border-t-0">
+              <div class="code-panel active" data-group="g2" data-tab="curl"><pre><code>curl -X POST https://umkm.skyuniverse.tech/api/daily-sales \
+  -H "Authorization: Bearer &lt;API_KEY&gt;" -H "Content-Type: application/json" \
+  -d '{"entry_date":"2026-09-25","item_id":1,"buyer_name":"Warung Berkah","starting_stock":25,"restock_quantity":10,"waste_quantity":2}'</code></pre></div>
+              <div class="code-panel" data-group="g2" data-tab="python"><pre><code>import requests
+res = requests.post("https://umkm.skyuniverse.tech/api/daily-sales",
+    json={"entry_date":"2026-09-25","item_id":1,"buyer_name":"Warung Berkah",
+          "starting_stock":25,"restock_quantity":10,"waste_quantity":2},
+    headers={"Authorization":"Bearer &lt;API_KEY&gt;","Content-Type":"application/json"})
+print(res.json())</code></pre></div>
+              <div class="code-panel" data-group="g2" data-tab="node"><pre><code>const res = await fetch("https://umkm.skyuniverse.tech/api/daily-sales", {
+  method: "POST",
+  headers: { Authorization: "Bearer &lt;API_KEY&gt;", "Content-Type": "application/json" },
+  body: JSON.stringify({entry_date:"2026-09-25",item_id:1,buyer_name:"Warung Berkah",starting_stock:25,restock_quantity:10,waste_quantity:2})
+});
+console.log(await res.json());</code></pre></div>
+          </div></div>
+        </div>
+      </section>
+      <section class="space-y-4">
+        <h2 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>2. Master Catalog (SKUs &amp; Groups)</span></h2>
+        <div class="spotlight bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800 rounded-2xl p-5 space-y-3 shadow-sm">
+          <div class="flex items-center justify-between flex-wrap gap-2"><div class="flex items-center gap-2 font-mono text-xs"><span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold border border-blue-500/20">GET</span><span class="font-semibold text-slate-900 dark:text-white">/api/items</span></div><span class="text-[11px] text-slate-500 dark:text-zinc-500">List all catalog items</span></div>
+          <div class="space-y-0"><div class="flex gap-1 bg-slate-800 rounded-t-xl px-2 pt-2"><button class="code-tab-btn active px-2.5 py-1 rounded-t-lg text-[11px]" data-group="g3" data-tab="curl">cURL</button><button class="code-tab-btn px-2.5 py-1 rounded-t-lg text-[11px] text-zinc-400 hover:text-white" data-group="g3" data-tab="python">Python</button><button class="code-tab-btn px-2.5 py-1 rounded-t-lg text-[11px] text-zinc-400 hover:text-white" data-group="g3" data-tab="node">Node.js</button></div>
+            <div class="bg-slate-900 text-slate-200 rounded-b-xl rounded-tr-xl p-3 font-mono text-xs overflow-x-auto border border-slate-800 border-t-0">
+              <div class="code-panel active" data-group="g3" data-tab="curl"><pre><code>curl -s -H "Authorization: Bearer &lt;API_KEY&gt;" https://umkm.skyuniverse.tech/api/items</code></pre></div>
+              <div class="code-panel" data-group="g3" data-tab="python"><pre><code>import requests
+res = requests.get("https://umkm.skyuniverse.tech/api/items",
+    headers={"Authorization":"Bearer &lt;API_KEY&gt;"})
+print(res.json())</code></pre></div>
+              <div class="code-panel" data-group="g3" data-tab="node"><pre><code>const res = await fetch("https://umkm.skyuniverse.tech/api/items",
+  { headers: { Authorization: "Bearer &lt;API_KEY&gt;" } });
+console.log(await res.json());</code></pre></div>
+          </div></div>
+        </div>
+        <div class="spotlight bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800 rounded-2xl p-5 space-y-3 shadow-sm">
+          <div class="flex items-center justify-between flex-wrap gap-2"><div class="flex items-center gap-2 font-mono text-xs"><span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/20">POST</span><span class="font-semibold text-slate-900 dark:text-white">/api/items</span></div><span class="text-[11px] text-slate-500 dark:text-zinc-500">Create new SKU</span></div>
+          <div class="space-y-0"><div class="flex gap-1 bg-slate-800 rounded-t-xl px-2 pt-2"><button class="code-tab-btn active px-2.5 py-1 rounded-t-lg text-[11px]" data-group="g4" data-tab="curl">cURL</button><button class="code-tab-btn px-2.5 py-1 rounded-t-lg text-[11px] text-zinc-400 hover:text-white" data-group="g4" data-tab="python">Python</button><button class="code-tab-btn px-2.5 py-1 rounded-t-lg text-[11px] text-zinc-400 hover:text-white" data-group="g4" data-tab="node">Node.js</button></div>
+            <div class="bg-slate-900 text-slate-200 rounded-b-xl rounded-tr-xl p-3 font-mono text-xs overflow-x-auto border border-slate-800 border-t-0">
+              <div class="code-panel active" data-group="g4" data-tab="curl"><pre><code>curl -X POST https://umkm.skyuniverse.tech/api/items \
+  -H "Authorization: Bearer &lt;API_KEY&gt;" -H "Content-Type: application/json" \
+  -d '{"name":"Nasi Cakalang Suwir","current_price":9000,"group_name":"Paket Nasi"}'</code></pre></div>
+              <div class="code-panel" data-group="g4" data-tab="python"><pre><code>import requests
+res = requests.post("https://umkm.skyuniverse.tech/api/items",
+    json={"name":"Nasi Cakalang Suwir","current_price":9000,"group_name":"Paket Nasi"},
+    headers={"Authorization":"Bearer &lt;API_KEY&gt;","Content-Type":"application/json"})
+print(res.json())</code></pre></div>
+              <div class="code-panel" data-group="g4" data-tab="node"><pre><code>const res = await fetch("https://umkm.skyuniverse.tech/api/items", {
+  method: "POST",
+  headers: { Authorization: "Bearer &lt;API_KEY&gt;", "Content-Type": "application/json" },
+  body: JSON.stringify({name:"Nasi Cakalang Suwir",current_price:9000,group_name:"Paket Nasi"})
+});
+console.log(await res.json());</code></pre></div>
+          </div></div>
+        </div>
+      </section>
+      <section class="space-y-4">
+        <h2 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>3. Operational Expenditures (OpEx)</span></h2>
+        <div class="spotlight bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800 rounded-2xl p-5 space-y-3 shadow-sm">
+          <div class="flex items-center justify-between flex-wrap gap-2"><div class="flex items-center gap-2 font-mono text-xs"><span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold border border-blue-500/20">GET</span><span class="font-semibold text-slate-900 dark:text-white">/api/opex</span></div><span class="text-[11px] text-slate-500 dark:text-zinc-500">Retrieve all expenditures</span></div>
+          <div class="space-y-0"><div class="flex gap-1 bg-slate-800 rounded-t-xl px-2 pt-2"><button class="code-tab-btn active px-2.5 py-1 rounded-t-lg text-[11px]" data-group="g5" data-tab="curl">cURL</button><button class="code-tab-btn px-2.5 py-1 rounded-t-lg text-[11px] text-zinc-400 hover:text-white" data-group="g5" data-tab="python">Python</button><button class="code-tab-btn px-2.5 py-1 rounded-t-lg text-[11px] text-zinc-400 hover:text-white" data-group="g5" data-tab="node">Node.js</button></div>
+            <div class="bg-slate-900 text-slate-200 rounded-b-xl rounded-tr-xl p-3 font-mono text-xs overflow-x-auto border border-slate-800 border-t-0">
+              <div class="code-panel active" data-group="g5" data-tab="curl"><pre><code>curl -s -H "Authorization: Bearer &lt;API_KEY&gt;" https://umkm.skyuniverse.tech/api/opex</code></pre></div>
+              <div class="code-panel" data-group="g5" data-tab="python"><pre><code>import requests
+res = requests.get("https://umkm.skyuniverse.tech/api/opex",
+    headers={"Authorization":"Bearer &lt;API_KEY&gt;"})
+print(res.json())</code></pre></div>
+              <div class="code-panel" data-group="g5" data-tab="node"><pre><code>const res = await fetch("https://umkm.skyuniverse.tech/api/opex",
+  { headers: { Authorization: "Bearer &lt;API_KEY&gt;" } });
+console.log(await res.json());</code></pre></div>
+          </div></div>
+        </div>
+        <div class="spotlight bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800 rounded-2xl p-5 space-y-3 shadow-sm">
+          <div class="flex items-center justify-between flex-wrap gap-2"><div class="flex items-center gap-2 font-mono text-xs"><span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/20">POST</span><span class="font-semibold text-slate-900 dark:text-white">/api/opex</span></div><span class="text-[11px] text-slate-500 dark:text-zinc-500">Record an expenditure</span></div>
+          <div class="space-y-0"><div class="flex gap-1 bg-slate-800 rounded-t-xl px-2 pt-2"><button class="code-tab-btn active px-2.5 py-1 rounded-t-lg text-[11px]" data-group="g6" data-tab="curl">cURL</button><button class="code-tab-btn px-2.5 py-1 rounded-t-lg text-[11px] text-zinc-400 hover:text-white" data-group="g6" data-tab="python">Python</button><button class="code-tab-btn px-2.5 py-1 rounded-t-lg text-[11px] text-zinc-400 hover:text-white" data-group="g6" data-tab="node">Node.js</button></div>
+            <div class="bg-slate-900 text-slate-200 rounded-b-xl rounded-tr-xl p-3 font-mono text-xs overflow-x-auto border border-slate-800 border-t-0">
+              <div class="code-panel active" data-group="g6" data-tab="curl"><pre><code>curl -X POST https://umkm.skyuniverse.tech/api/opex \
+  -H "Authorization: Bearer &lt;API_KEY&gt;" -H "Content-Type: application/json" \
+  -d '{"item_name":"Minyak Goreng 2L","price_paid":34000,"quantity":3,"measurement":"Litre"}'</code></pre></div>
+              <div class="code-panel" data-group="g6" data-tab="python"><pre><code>import requests
+res = requests.post("https://umkm.skyuniverse.tech/api/opex",
+    json={"item_name":"Minyak Goreng 2L","price_paid":34000,"quantity":3,"measurement":"Litre"},
+    headers={"Authorization":"Bearer &lt;API_KEY&gt;","Content-Type":"application/json"})
+print(res.json())</code></pre></div>
+              <div class="code-panel" data-group="g6" data-tab="node"><pre><code>const res = await fetch("https://umkm.skyuniverse.tech/api/opex", {
+  method: "POST",
+  headers: { Authorization: "Bearer &lt;API_KEY&gt;", "Content-Type": "application/json" },
+  body: JSON.stringify({item_name:"Minyak Goreng 2L",price_paid:34000,quantity:3,measurement:"Litre"})
+});
+console.log(await res.json());</code></pre></div>
+          </div></div>
+        </div>
+      </section>
+      <section class="space-y-4">
+        <h2 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>4. Executive Analytics</span></h2>
+        <div class="spotlight bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800 rounded-2xl p-5 space-y-3 shadow-sm">
+          <div class="flex items-center justify-between flex-wrap gap-2"><div class="flex items-center gap-2 font-mono text-xs"><span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold border border-blue-500/20">GET</span><span class="font-semibold text-slate-900 dark:text-white">/api/analytics/rolling-30d</span></div><span class="text-[11px] text-slate-500 dark:text-zinc-500">30-day Rolling Revenue, OpEx &amp; Gross Profit</span></div>
+          <div class="space-y-0"><div class="flex gap-1 bg-slate-800 rounded-t-xl px-2 pt-2"><button class="code-tab-btn active px-2.5 py-1 rounded-t-lg text-[11px]" data-group="g7" data-tab="curl">cURL</button><button class="code-tab-btn px-2.5 py-1 rounded-t-lg text-[11px] text-zinc-400 hover:text-white" data-group="g7" data-tab="python">Python</button><button class="code-tab-btn px-2.5 py-1 rounded-t-lg text-[11px] text-zinc-400 hover:text-white" data-group="g7" data-tab="node">Node.js</button></div>
+            <div class="bg-slate-900 text-slate-200 rounded-b-xl rounded-tr-xl p-3 font-mono text-xs overflow-x-auto border border-slate-800 border-t-0">
+              <div class="code-panel active" data-group="g7" data-tab="curl"><pre><code>curl -s -H "Authorization: Bearer &lt;API_KEY&gt;" \
+  https://umkm.skyuniverse.tech/api/analytics/rolling-30d</code></pre></div>
+              <div class="code-panel" data-group="g7" data-tab="python"><pre><code>import requests
+res = requests.get("https://umkm.skyuniverse.tech/api/analytics/rolling-30d",
+    headers={"Authorization":"Bearer &lt;API_KEY&gt;"})
+print(res.json())</code></pre></div>
+              <div class="code-panel" data-group="g7" data-tab="node"><pre><code>const res = await fetch("https://umkm.skyuniverse.tech/api/analytics/rolling-30d",
+  { headers: { Authorization: "Bearer &lt;API_KEY&gt;" } });
+console.log(await res.json());</code></pre></div>
+          </div></div>
+        </div>
+      </section>
+    </main>
+    <footer class="border-t border-slate-200 dark:border-zinc-800 px-4 py-6 text-center text-xs text-slate-500 dark:text-zinc-500 transition-colors">
+      <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3"><span>UMKM Enterprise Accounting Monolith</span><span>All Rights Reserved &copy; 2026 - SkyUniverse Technology</span></div>
+    </footer>
+    <div id="toast" class="fixed bottom-5 right-5 z-[80] hidden">
+      <div class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-semibold shadow-lg border border-emerald-500"><i class="fas fa-check-circle"></i><span id="toastMsg">Copied!</span></div>
+    </div>
+  </div>
+  <script>
+    function showToast(msg){const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;t.classList.remove('hidden');clearTimeout(window.__tt);window.__tt=setTimeout(()=>t.classList.add('hidden'),2200);}
+    function copySnippet(t){navigator.clipboard.writeText(t);showToast('Copied to clipboard');}
+    const toggleBtn=document.getElementById('themeToggle'),moonIcon=document.getElementById('moonIcon'),sunIcon=document.getElementById('sunIcon');
+    function applyTheme(t){if(t==='light'){document.documentElement.classList.remove('dark');moonIcon.classList.remove('hidden');sunIcon.classList.add('hidden');toggleBtn.className='p-2 rounded-xl border transition-all flex items-center justify-center cursor-pointer bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200 hover:text-amber-500 hover:border-emerald-500/50'}else{document.documentElement.classList.add('dark');sunIcon.classList.remove('hidden');moonIcon.classList.add('hidden');toggleBtn.className='p-2 rounded-xl border transition-all flex items-center justify-center cursor-pointer bg-zinc-900 border-zinc-800 text-zinc-300 hover:bg-zinc-800 hover:text-amber-400 hover:border-emerald-500/50'}}
+    applyTheme(localStorage.getItem('umkm-theme')||'dark');
+    toggleBtn.addEventListener('click',()=>{const n=document.documentElement.classList.contains('dark')?'light':'dark';localStorage.setItem('umkm-theme',n);applyTheme(n)});
+    document.querySelectorAll('.code-tab-btn').forEach(b=>{b.addEventListener('click',()=>{const g=b.dataset.group,t=b.dataset.tab;document.querySelectorAll('.code-tab-btn[data-group="'+g+'"]').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.code-panel[data-group="'+g+'"]').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelector('.code-panel[data-group="'+g+'"][data-tab="'+t+'"]').classList.add('active')})});
+    document.querySelectorAll('.spotlight').forEach(el=>{el.addEventListener('mousemove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--mx',(e.clientX-r.left)+'px');el.style.setProperty('--my',(e.clientY-r.top)+'px');});});
+  </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+# ── Root ignore for SkyUniverse UMKM-ERP monorepo ──
+# (each subproject also has its own .gitignore)
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build output
+dist/
+out/
+*.tgz
+
+# Secrets / env
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+*.p12
+*.mobileprovision
+
+# WhatsApp session (full account access — NEVER commit)
+UMKM-WA-Bot/auth_info_baileys/
+# Runtime PII
+UMKM-WA-Bot/whitelist.json
+UMKM-WA-Bot/reminder_config.json
+
+# Capacitor / native build artifacts
+UMKM/android/.gradle/
+UMKM/android/build/
+UMKM/android/app/build/
+UMKM/android/local.properties
+UMKM/android/keystore.properties
+UMKM/android/.idea/
+UMKM/ios/App/Pods/
+UMKM/ios/App/build/
+UMKM/ios/DerivedData/
+UMKM/ios/App/App/public/
+
+# Logs / caches / OS
+*.log
+.cache/
+.eslintcache
+*.tsbuildinfo
+.DS_Store
+.idea/
