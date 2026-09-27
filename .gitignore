@@ -44,3 +44,9 @@ UMKM/ios/App/App/public/
 *.tsbuildinfo
 .DS_Store
 .idea/
+
+# Markdown docs (keep only README.md)
+*.md
+*.MD
+!README.md
+!**/README.md
